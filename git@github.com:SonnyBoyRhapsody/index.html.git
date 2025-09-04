@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⛩10問チャレンジクイズ⛩</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 90%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            border-radius: 25px;
+            height: 8px;
+            margin: 20px 0 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: white;
+            height: 100%;
+            border-radius: 25px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+        
+        .quiz-content {
+            padding: 40px;
+        }
+        
+        .question-number {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .question {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        
+        .options {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            background: #f9f9f9;
+        }
+        
+        .option:hover {
+            border-color: #4CAF50;
+            background: #f0f8f0;
+            transform: translateY(-2px);
+        }
+        
+        .option.selected {
+            border-color: #4CAF50;
+            background: #e8f5e8;
+        }
+        
+        .option.correct {
+            border-color: #4CAF50;
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .next-btn {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            float: right;
+            display: none;
+        }
+        
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .result-screen {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .result-emoji {
+            font-size: 5rem;
+            margin-bottom: 20px;
+        }
+        
+        .result-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .result-score {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .result-message {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .restart-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .restart-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .perfect {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+        }
+        
+        .excellent {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        .good {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+            color: white;
+        }
+        
+        .average {
+            background: linear-gradient(135deg, #FF9800, #F57C00);
+            color: white;
+        }
+        
+        .poor {
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+            color: white;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+        
+        .bounce {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #FFD700;
+            animation: confetti 3s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⛩ 10問チャレンジクイズ⛩</h1>
+            <p>全10問に挑戦しよう！</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">問題 1 / 10</p>
+        </div>
+        
+        <div class="quiz-content" id="quizContent">
+            <div class="question-number" id="questionNumber">問題 1</div>
+            <div class="question" id="questionText"></div>
+            <div class="options" id="optionsContainer"></div>
+            <button class="next-btn" id="nextBtn" onclick="nextQuestion()">次の問題</button>
+            <div style="clear: both;"></div>
+        </div>
+        
+        <div class="result-screen" id="resultScreen">
+            <div class="result-emoji" id="resultEmoji"></div>
+            <div class="result-title" id="resultTitle"></div>
+            <div class="result-score" id="resultScore"></div>
+            <div class="result-message" id="resultMessage"></div>
+            <button class="restart-btn" onclick="restartQuiz()">もう一度挑戦</button>
+        </div>
+    </div>
+
+    <script>
+        // クイズデータ
+        const quizData = [
+            {
+                question: "手水の順番は？",
+                options: ["左手→右手→持ち手", "右手→左手→持ち手", "持ち手→左手→右手", "持ち手→右手→左手"],
+                correct: 1
+            },
+            {
+                question: "｢天神さん｣と呼ばれる神社に祀られているのは？",
+                options: ["天照大御神
+", "応神天皇", "菅原道真", "安徳天皇"],
+                correct: 3
+            },
+            {
+                question: "｢お諏訪さん｣と呼ばれる神社に祀られているのは？",
+                options: ["応神天皇", "建御名方神", "瓊瓊杵尊", "菅原道真"],
+                correct: 2
+            },
+            {
+                question: "神社の参拝作法として正しいのは？",
+                options: ["二拍一拍一礼", "二礼二拍手三礼", "二礼二拍手一礼", "三礼二拍二礼"],
+                correct: 3
+            },
+            {
+                question: "鳥居は神社に入る際に必ずくぐるものですが、主な意味は？",
+                options: ["幸運を呼ぶ", "神と人の世との区切り", "邪気を払う", "願いを叶える"],
+                correct: 2
+            },
+            {
+                question: "藤川天神の主なご利益はなに？",
+                options: ["五穀豊穣", "合格祈願", "商売繁盛", "交通安全"],
+                correct: 2
+            },
+            {
+                question: "諏訪神社の主なご利益はなに？",
+                options: ["交通安全", "商売繁盛", "五穀豊穣", "勝運・武運長久"],
+                correct: 4
+            },
+            {
+                question: "藤川天神の境内には「臥龍梅」と呼ばれる梅の木があります。これはどういう姿をしている？",
+                options: ["龍のように幹が地を這っている", "一年中花が落ちない", "秋に花をつける", "夜になると光る"],
+                correct: 1
+            },
+            {
+                question: "新田神社の参道には500段以上の石段があります。その段数はおよそいくつ？",
+                options: ["170段", "250段", "322段", "415段"],
+                correct: 3
+            },
+            {
+                question: "「二礼二拍手一礼」という参拝作法が正式に定められたのはどの時代？",
+                options: ["平安", "江戸", "明治", "昭和"],
+                correct: 3
+            }
+        ];
+        
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedOption = null;
+        let answered = false;
+        
+        // 初期化
+        function init() {
+            showQuestion();
+        }
+        
+        // 問題を表示
+        function showQuestion() {
+            const question = quizData[currentQuestion];
+            
+            document.getElementById('questionNumber').textContent = `問題 ${currentQuestion + 1}`;
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('progressText').textContent = `問題 ${currentQuestion + 1} / 10`;
+            
+            // プログレスバー更新
+            const progress = ((currentQuestion) / 10) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // 選択肢を表示
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'option';
+                optionElement.textContent = option;
+                optionElement.onclick = () => selectOption(index);
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // リセット
+            selectedOption = null;
+            answered = false;
+            document.getElementById('nextBtn').style.display = 'none';
+        }
+        
+        // 選択肢を選択
+        function selectOption(index) {
+            if (answered) return;
+            
+            selectedOption = index;
+            const options = document.querySelectorAll('.option');
+            const correctAnswer = quizData[currentQuestion].correct;
+            
+            // 全ての選択肢をリセット
+            options.forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // 正解・不正解を表示
+            options.forEach((option, i) => {
+                if (i === correctAnswer) {
+                    option.classList.add('correct');
+                } else if (i === selectedOption && i !== correctAnswer) {
+                    option.classList.add('incorrect');
+                }
+            });
+            
+            // スコア計算
+            if (selectedOption === correctAnswer) {
+                score++;
+            }
+            
+            answered = true;
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+        
+        // 次の問題
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < quizData.length) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+        
+        // 結果画面を表示
+        function showResult() {
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+            
+            const percentage = (score / quizData.length) * 100;
+            let resultData;
+            
+            // スコアに応じて結果を決定
+            if (score === 10) {
+                resultData = {
+                    emoji: '🏆',
+                    title: '完璧！君たちは天才だ！',
+                    message: 'すべての問題に正解しました😮！\n素晴らしい！',
+                    class: 'perfect'
+                };
+                createConfetti();
+            } else if (score >= 8) {
+                resultData = {
+                    emoji: '☺️',
+                    title: 'それなりにすごい！',
+                    message: 'ほとんどの問題が正解！\nそれなりにすごい！',
+                    class: 'excellent'
+                };
+            } else if (score >= 6) {
+                resultData = {
+                    emoji: '😀',
+                    title: 'まあ、いいじゃん',
+                    message: '半分は取れてる！\nもう少しで優秀！',
+                    class: 'good'
+                };
+            } else if (score >= 4) {
+                resultData = {
+                    emoji: '🙂',
+                    title: '凡人',
+                    message: 'まずまずの成績です。\nもう一度挑戦してみましょう！',
+                    class: 'average'
+                };
+            } else {
+                resultData = {
+                    emoji: '😅',
+                    title: '頑張って笑',
+                    message: 'まだまだ伸びしろがあります笑！\n勉強してもう一度挑戦笑！',
+                    class: 'poor'
+                };
+            }
+            
+            // 結果を表示
+            document.getElementById('resultEmoji').textContent = resultData.emoji;
+            document.getElementById('resultTitle').textContent = resultData.title;
+            document.getElementById('resultScore').textContent = `${score} / 10 点`;
+            document.getElementById('resultMessage').textContent = resultData.message;
+            
+            // ヘッダーの色を変更
+            const header = document.querySelector('.header');
+            header.className = `header ${resultData.class}`;
+            
+            // 完璧な場合はアニメーション追加
+            if (score === 10) {
+                document.getElementById('resultEmoji').classList.add('bounce');
+            }
+        }
+        
+        // 紙吹雪エフェクト
+        function createConfetti() {
+            const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }, i * 100);
+            }
+        }
+        
+        // クイズを再開
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            selectedOption = null;
+            answered = false;
+            
+            document.getElementById('quizContent').style.display = 'block';
+            document.getElementById('resultScreen').style.display = 'none';
+            
+            // ヘッダーを元に戻す
+            const header = document.querySelector('.header');
+            header.className = 'header';
+            
+            showQuestion();
+        }
+        
+        // 初期化実行
+        init();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'979da63c41f6d557',t:'MTc1Njk5MDYxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
