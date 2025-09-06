@@ -6,9 +6,11 @@
   <title>⛩神社くいず⛩</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Hangyaku','Mameron',sans-serif;
-    body{ background: url( 'frows.jpg' ) no-repeat center center fixed;background-size: cover; auto;color: #333; display: flex; align-items: center; justify-content: center;}
-    .container{max-width:800px;width:90%;background:#fff;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,.2);overflow:hidden}
+    body{font:'Hangyaku','Mameron',sans-serif;background: url( 'frows.jpg' ) no-repeat center center fixed;background-size: cover; auto;color: #333; display: flex; align-items: center; justify-content: center;}
+    ..container {
+    margin: 0 auto;   /* 横中央に配置 */
+    max-width: 800px; /* 横幅を固定（好きな値に調整してOK） */
+    text-align: center; /* 中のテキストを中央寄せ */}
     .header{background:linear-gradient(135deg,#FCA9B0,#FCA9B0);color:#fff;padding:30px;text-align:center}
     .header h1{font-size:2.5rem;margin-bottom:10px}
     .progress-bar{background:rgba(255,255,255,.3);border-radius:25px;height:8px;margin:20px 0 10px;overflow:hidden}
